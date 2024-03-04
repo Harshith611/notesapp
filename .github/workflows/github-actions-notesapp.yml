@@ -1,0 +1,25 @@
+name: Notesapp
+
+on: [push]
+  
+jobs:
+    runs-on: ubuntu-latest
+
+    services:
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: actions/setup-docker@v2
+        
+      - name: Build and Run Docker Container
+        run: |
+          docker-compose up --detach
+
+      - name: Check cURL Request
+        run: |
+          curl -X GET http://localhost:8000/
+
+      - name: Stop Docker Container
+        run: docker-compose down
