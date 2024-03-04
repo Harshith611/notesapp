@@ -4,7 +4,7 @@ name: Notesapp
 jobs:
   build:
     runs-on: ubuntu-latest
-    services: null
+    services:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
