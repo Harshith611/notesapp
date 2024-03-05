@@ -9,8 +9,10 @@ jobs:
       - name: Build and Run Docker Container
         run: |
           docker-compose up --detach 
+      - name: Wait for application to start
+        run: sleep 30s
       - name: Check cURL Request
         run: |
-          curl -X GET http://localhost:8000/
+          curl -X GET http://localhost:8000/        
       - name: Stop Docker Container
         run: docker-compose down
