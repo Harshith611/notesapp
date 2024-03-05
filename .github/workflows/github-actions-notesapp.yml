@@ -7,7 +7,7 @@ jobs:
     steps:
       - name: Build and Run Docker Container
         run: |
-          docker-compose up --build
+          docker-compose -f docker-compose.yml up --detach 
       - name: Check cURL Request
         run: |
           curl -X GET http://localhost:8000/
