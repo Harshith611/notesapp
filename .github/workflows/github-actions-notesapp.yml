@@ -6,10 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-      - name: Set up Docker
-        uses: actions/setup-docker@v2
+        uses: actions/setup-docker@v3
       - name: Build and Run Docker Container
         run: |
           docker-compose up --detach
