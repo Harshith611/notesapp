@@ -18,14 +18,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt  # Adjust based on your project's requirements
-          pip install fastapi uvicorn pymongo  # Install FastAPI and MongoDB driver
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Start FastAPI and MongoDB as background processes
+      - name: Start FastAPI and MongoDB
         run: |
-          nohup uvicorn index:app --host 0.0.0.0 --port 8000 > fastapi.log 2>&1 &  # Redirect FastAPI logs to a file
-          # Adjust MongoDB start command if necessary
-          mongod --fork --logpath /var/log/mongodb.log > mongodb.log 2>&1 &  # Redirect MongoDB logs to a file
+          nohup uvicorn index:app --host 0.0.0.0 --port 8000 > fastapi.log 2>&1 &
+          mongod --fork --logpath /var/log/mongodb.log > mongodb.log 2>&1 &
 
       - name: Print FastAPI Logs
         run: cat fastapi.log
