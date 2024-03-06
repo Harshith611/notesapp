@@ -31,7 +31,9 @@ jobs:
           curl -X GET http://localhost:8000/
 
       - name: Cleanup
-        run: pkill -f "uvicorn index:app" && pkill -f "mongod"
+        run: |
+          killall -q uvicorn mongod || true
+    
 
       - name: Wait for processes to stop
         run: sleep 10s
