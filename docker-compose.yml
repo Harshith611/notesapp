@@ -4,7 +4,7 @@ services:
   app:
     build: .
     ports:
-      - "8000:8000"  # Map host port 8000 to container port 80
+      - "127.0.0.1:8000:8000"  # Map host port 8000 to container port 80
     depends_on:
       - mongodb  # Ensure that MongoDB service is started before the app
 
