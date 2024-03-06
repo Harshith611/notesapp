@@ -13,4 +13,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code into the container at /app
 COPY . /app/
 
-CMD ["uvicorn", "index:app", "--host", "127.0.0.1", "--port", "8000", "--reload"]
+CMD ["uvicorn", "index:app", "--host", "--port", "8000", "--reload"]
