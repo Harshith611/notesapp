@@ -1,20 +1,38 @@
 name: Notesapp
-"on":
+
+on:
   - push
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Build and Run Docker Container
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
         run: |
-          docker-compose up --detach
-      - name: checking for docker
-        run: docker ps -a 
-      - name: Wait for application to start
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
+          pip3 install -r requirements.txt  # Adjust based on your project's requirements
+
+      - name: Start FastAPI and MongoDB as background processes
+        run: |
+          nohup uvicorn index:app --host 0.0.0.0 --port 8000 &  # Adjust the command accordingly
+          mongod --fork --logpath /var/log/mongodb.log &  # Adjust the command accordingly
+
+      - name: Wait for processes to start
         run: sleep 30s
+
       - name: Check cURL Request
         run: |
-          curl -X GET http://localhost:8000/        
-      - name: Stop Docker Container
-        run: docker-compose down
+          curl -X GET http://localhost:8000/
+
+      - name: Cleanup
+        run: |
+          pkill -f "uvicorn index:app"  # Adjust the process name accordingly
+          pkill -f "mongod"
+
+      - name: Wait for processes to stop
+        run: sleep 10s
