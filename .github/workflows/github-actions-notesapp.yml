@@ -34,8 +34,8 @@ jobs:
 
       - name: Check cURL Request
         run: |
-          curl -X GET http://localhost:8000/
-
+          curl -v http://localhost:8000/
+      
       - name: Cleanup
         run: |
           killall -q uvicorn mongod || true
