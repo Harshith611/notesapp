@@ -33,7 +33,24 @@ jobs:
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
 
-      - name: Check endpoint with curl
+      - name: Debug - List processes
         run: |
-          sleep 30  # Wait for the FastAPI application to start
-          curl -X GET http://localhost:8000/
+          ps aux
+
+      - name: Debug - Check listening ports
+        run: |
+          netstat -tuln
+
+      - name: Debug - Sleep for 30 seconds
+        run: sleep 30
+
+      - name: Debug - Check listening ports again
+        run: |
+          netstat -tuln
+
+      - name: Debug - Output contents of /etc/hosts
+        run: |
+          cat /etc/hosts
+
+      - name: Debug - Check if the application is running
+        run: curl -X GET http://localhost:8000/
