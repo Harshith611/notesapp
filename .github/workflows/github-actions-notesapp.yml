@@ -1,10 +1,12 @@
-name: Notesapp
+name: NotesApp
 
 on:
-  - push
+ push:
+    branches:
+      - index # Adjust this to the branch you want to trigger the workflow on
 
 jobs:
-  build:
+ build:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,9 +28,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y mongodb
 
-      - name: Start FastAPI and MongoDB
+      - name: Start MongoDB
+        run: |
+          sudo systemctl start mongodb
+
+      - name: Start FastAPI
         run: |
           nohup uvicorn index:app --host 0.0.0.0 --port 8000 > fastapi.log 2>&1 &
+          echo $! > fastapi.pid # Save the PID of the FastAPI process
 
       - name: Print FastAPI Logs
         run: cat fastapi.log
@@ -41,4 +48,6 @@ jobs:
           curl -v http://localhost:8000/
 
       - name: Cleanup
-        run: killall -q uvicorn || true
+        run: |
+          kill $(cat fastapi.pid) || true
+          sudo systemctl stop mongodb || true
