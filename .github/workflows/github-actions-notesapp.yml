@@ -27,11 +27,12 @@ jobs:
         run: |
           echo "MONGO_URI=mongodb+srv://harshithkumar6510:harshithkumar6510@cluster0.uomdcii.mongodb.net/" >> $GITHUB_ENV
 
-      - name: Run FastAPI application
+      - name: Run your FastAPI application
         run: |
-          uvicorn index:app --host 127.0.0.1 --port 8000
+          uvicorn your_fastapi_app:app --host 0.0.0.0 --port 8000
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
+     
 
       - name: Check endpoint with curl
         run: |
