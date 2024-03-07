@@ -1,33 +1,38 @@
-name: Notesapp
+name: FastAPI Workflow
 
 on:
- - 'push'
+  - 'push'
+
 jobs:
   build:
-     runs-on: ubuntu-latest
-     steps:
-     - name: Checkout Code
-       uses: actions/checkout@v2
- 
-     - name: Set up Python
-       uses: actions/setup-python@v2
-       with:
-         python-version: 3.8
- 
-     - name: Install dependencies
-       run: |
-         pip install --upgrade pip
-         pip install -r requirements.txt
-     - name: Install MongoDB
-       uses: supercharge/mongodb-github-action@1.10.0
- 
-     - name: Run FastAPI Tests
-       run: |
-         nohup uvicorn myapp.index:app --host 0.0.0.0 --port 8000 > fastapi.log 2>&1 &
-         echo $! > fastapi.pid # Save the PID of the FastAPI process
-         sleep 30s # Wait for FastAPI to start
-         # Add your tests here, e.g., cURL requests or use a testing framework
-         curl -X GET http://localhost:8000/
-         # Don't forget to stop the FastAPI server if it is no longer needed
-         kill $(cat fastapi.pid) || true
- 
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install uvicorn
+
+      - name: Set up MongoDB connection
+        run: |
+          echo "MONGO_URI=mongodb+srv://harshithkumar6510:harshithkumar6510@cluster0.uomdcii.mongodb.net/" >> $GITHUB_ENV
+
+      - name: Run FastAPI application
+        run: |
+          uvicorn index:app --host 0.0.0.0 --port 8000
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+
+      - name: Check endpoint with curl
+        run: |
+          curl -X GET http://localhost:8000/
+
