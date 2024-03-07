@@ -1,53 +1,38 @@
 name: Notesapp
 
 on:
-  push:
+ push:
     branches:
-      - index  # Adjust this to the branch you want to trigger the workflow on
-
+      - index 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
-
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Install MongoDB
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y mongodb
-
-      - name: Start MongoDB
-        run: |
-          sudo systemctl start mongodb
-
-      - name: Start FastAPI
-        run: |
-          nohup uvicorn index:app --host 0.0.0.0 --port 8000 > fastapi.log 2>&1 &
-          echo $! > fastapi.pid  # Save the PID of the FastAPI process
-
-      - name: Print FastAPI Logs
-        run: cat fastapi.log
-
-      - name: Wait for processes to start
-        run: sleep 30s
-
-      - name: Check cURL Request
-        run: |
-          curl -v http://localhost:8000/
-
-      - name: Cleanup
-        run: |
-          kill $(cat fastapi.pid) || true
-          sudo systemctl stop mongodb || true
+     runs-on: ubuntu-latest
+     services:
+       mongodb:
+         image: mongo:latest
+         ports:
+           - 27017:27017
+     steps:
+     - name: Checkout Code
+       uses: actions/checkout@v2
+ 
+     - name: Set up Python
+       uses: actions/setup-python@v2
+       with:
+         python-version: 3.8
+ 
+     - name: Install dependencies
+       run: |
+         pip install --upgrade pip
+         pip install -r requirements.txt
+ 
+     - name: Run FastAPI Tests
+       run: |
+         nohup uvicorn myapp.index:app --host 0.0.0.0 --port 8000 > fastapi.log 2>&1 &
+         echo $! > fastapi.pid # Save the PID of the FastAPI process
+         sleep 30s # Wait for FastAPI to start
+         # Add your tests here, e.g., cURL requests or use a testing framework
+         curl -v http://localhost:8000/
+         # Don't forget to stop the FastAPI server if it is no longer needed
+         kill $(cat fastapi.pid) || true
+ 
