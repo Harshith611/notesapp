@@ -1,17 +1,10 @@
 name: Notesapp
 
 on:
- push:
-    branches:
-      - index 
+ - 'push'
 jobs:
   build:
      runs-on: ubuntu-latest
-     services:
-       mongodb:
-         image: mongo:latest
-         ports:
-           - 27017:27017
      steps:
      - name: Checkout Code
        uses: actions/checkout@v2
@@ -25,6 +18,8 @@ jobs:
        run: |
          pip install --upgrade pip
          pip install -r requirements.txt
+     - name: Install MongoDB
+       uses: supercharge/mongodb-github-action@1.10.0
  
      - name: Run FastAPI Tests
        run: |
@@ -32,7 +27,7 @@ jobs:
          echo $! > fastapi.pid # Save the PID of the FastAPI process
          sleep 30s # Wait for FastAPI to start
          # Add your tests here, e.g., cURL requests or use a testing framework
-         curl -v http://localhost:8000/
+         curl -X GET http://localhost:8000/
          # Don't forget to stop the FastAPI server if it is no longer needed
          kill $(cat fastapi.pid) || true
  
