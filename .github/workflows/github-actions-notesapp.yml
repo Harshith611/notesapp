@@ -21,7 +21,7 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
           pip install uvicorn
-          pip install pymongo
+          pip install "pymongo[srv]"
 
       - name: Set up MongoDB connection
         run: |
