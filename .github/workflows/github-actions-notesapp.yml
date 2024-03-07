@@ -1,12 +1,12 @@
-name: NotesApp
+name: FastAPI and MongoDB Workflow
 
 on:
- push:
+  push:
     branches:
-      - index # Adjust this to the branch you want to trigger the workflow on
+      - index  # Adjust this to the branch you want to trigger the workflow on
 
 jobs:
- build:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,7 +35,7 @@ jobs:
       - name: Start FastAPI
         run: |
           nohup uvicorn index:app --host 0.0.0.0 --port 8000 > fastapi.log 2>&1 &
-          echo $! > fastapi.pid # Save the PID of the FastAPI process
+          echo $! > fastapi.pid  # Save the PID of the FastAPI process
 
       - name: Print FastAPI Logs
         run: cat fastapi.log
