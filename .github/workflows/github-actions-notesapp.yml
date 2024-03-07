@@ -29,10 +29,11 @@ jobs:
 
       - name: Run your FastAPI application
         run: |
-          uvicorn index:app --host 0.0.0.0 --port 8000 --no-reload --no-access-log &
-          sleep 10  # Wait for the FastAPI application to start
+          nohup uvicorn index:app --host 0.0.0.0 --port 8000 --reload > /dev/null 2>&1 &
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
 
       - name: Check endpoint with curl
         run: |
-          sleep 30
-          curl -X GET http://127.0.0.1:8000/
+          sleep 30  # Wait for the FastAPI application to start
+          curl -X GET http://localhost:8000/
