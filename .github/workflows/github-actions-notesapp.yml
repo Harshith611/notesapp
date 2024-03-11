@@ -29,7 +29,7 @@ jobs:
 
       - name: Run your FastAPI application
         run: |
-          nohup uvicorn index:app --host 0.0.0.0 --port 8000 --reload > /dev/null 2>&1 &
+          uvicorn index:app --host 0.0.0.0 --port 8000 --reload
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         
